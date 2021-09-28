@@ -5,6 +5,7 @@ import com.spring.rest.service.roles.RoleService;
 import com.spring.rest.service.users.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,8 @@ import java.util.Arrays;
 
 @Controller
 @RequestMapping(value = "/admin")
+@Transactional
+
 public class AdminController {
 
     private UserService userService;

@@ -12,13 +12,15 @@ public interface UserService {
 
     void addUser(User user);
 
+    boolean updateUserById(User user, long id);
+
     void updateUser(User user, String[] selectedRoles);
 
     User getUserById(Long id);
 
     void deleteUser(User user);
 
-    void deleteUserById(long id);
+    boolean deleteUserById(long id);
 
     User getUserByEmail(String email);
 

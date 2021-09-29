@@ -13,11 +13,13 @@ public interface UserDao {
 
     void updateUser(User user);
 
+    boolean updateUserById(User user, long id);
+
     User getUserById(long id);
 
     void deleteUser(User user);
 
-    void deleteUserById(long id);
+    boolean deleteUserById(long id);
 
     User getUserByEmail(String firstname);
 }

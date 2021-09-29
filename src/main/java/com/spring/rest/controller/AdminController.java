@@ -56,9 +56,8 @@ public class AdminController {
 
 
     @PatchMapping(value = "/update")
-    public String updateUser(@ModelAttribute User user, @RequestParam(value = "roleList", required = false) String[] selectedRoles) {
-        System.out.println(user);
-        System.out.println(Arrays.toString(selectedRoles));
+    public String updateUser(@ModelAttribute User user,
+                             @RequestParam(value = "roleList", required = false) String[] selectedRoles) {
         userService.updateUser(user, selectedRoles);
         return "redirect:/admin";
     }

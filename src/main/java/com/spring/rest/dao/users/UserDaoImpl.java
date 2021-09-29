@@ -21,27 +21,38 @@ public class UserDaoImpl implements UserDao {
         List<User> list = entityManager.createQuery("from User", User.class).getResultList();
         return list;
     }
+
     @Transactional
     public void addUser(User user) {
         entityManager.persist(user);
     }
+
     @Transactional
     public void updateUser(User user) {
         entityManager.merge(user);
+    }
+
+    @Transactional
+    public boolean updateUserById(User user, long id) {
+        entityManager.persist(user);
+        return true;
     }
 
     @Transactional(readOnly = true)
     public User getUserById(long id) {
         return entityManager.find(User.class, id);
     }
+
     @Transactional
     public void deleteUser(User user) {
         entityManager.remove(entityManager.contains(user) ? user : entityManager.merge(user));
     }
+
     @Transactional
-    public void deleteUserById(long id) {
+    public boolean deleteUserById(long id) {
         User delUser = getUserById(id);
         entityManager.remove(delUser);
+        return true;
     }
 
     @Transactional(readOnly = true)

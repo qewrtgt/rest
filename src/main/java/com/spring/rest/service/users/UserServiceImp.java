@@ -66,8 +66,8 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void deleteUserById(long id) {
-        userDao.deleteUserById(id);
+    public boolean deleteUserById(long id) {
+        return userDao.deleteUserById(id);
     }
 
     @Override
@@ -95,5 +95,9 @@ public class UserServiceImp implements UserService {
             userRoles.append(role.toString()).append(" ");
         }
         return userRoles.toString();
+    }
+
+    public boolean updateUserById(User user, long id){
+       return userDao.updateUserById(user, id);
     }
 }

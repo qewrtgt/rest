@@ -1,7 +1,7 @@
 package com.spring.rest.controller;
 
 import com.spring.rest.model.User;
-import com.spring.rest.service.users.UserService;
+import com.spring.rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/rest")
+@RequestMapping(value = "/api")
 public class Rest {
     @Autowired
     UserService userService;
@@ -41,26 +41,21 @@ public class Rest {
     @PatchMapping(value = "/{id}")
     public ResponseEntity<?> updateUser(@PathVariable(name = "id") long id,
                                         @RequestBody User user) {
-//        final boolean updatedUser = userService.updateUserById(user, id);
-//        return updatedUser
-//                ? new ResponseEntity<>(HttpStatus.OK)
-//                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-        userService.updateUser(user,null);
+        userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @PostMapping(value = "")
     public ResponseEntity<?> createUser(@RequestBody User user) {
-        userService.addUser(user);
+        userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value="/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable(name = "id") long id){
-        final boolean deletedUser = userService.deleteUserById(id);
-        return deletedUser
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable(name = "id") long id) {
+        User user = userService.getUserById(id);
+        userService.deleteUser(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

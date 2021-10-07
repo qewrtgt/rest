@@ -1,15 +1,19 @@
 package com.spring.rest.service;
 
-import com.spring.rest.dao.UserRepository;
 import com.spring.rest.model.User;
+import com.spring.rest.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -17,26 +21,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public void addUser(User user) {
-        userRepository.save(user);
-    }
-
-    @Override
-    public void updateUser(User user, String[] selectedRoles) {
-    }
-
-    @Override
-    public User getUserById(int id) {
-        User user = null;
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()){
-            user = userOptional.get();
+        List<User> users =  userRepository.findAll();
+        for (User user:users){
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         }
+        return users;
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        User user = userRepository.getById(id);
+        user.setPassword("");
         return user;
+    }
+
+    @Override
+    public void saveUser(User user) {
+        if (user.getPassword().equals("")) {
+            user.setPassword(loadUserByUsername(user.getEmail()).getPassword());
+        } else {
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        }
+        userRepository.save(user);
     }
 
     @Override
@@ -45,17 +51,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(int id) {
-        userRepository.deleteById(id);
-    }
-
-    @Override
-    public User getUserByEmail(String email) {
-        return null;
-    }
-
-    @Override
-    public String getRolesString(User user) {
-        return null;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
     }
 }
+

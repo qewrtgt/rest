@@ -1,27 +1,17 @@
 package com.spring.rest.service;
 
 import com.spring.rest.model.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     List<User> getAllUsers();
 
-    void addUser(User user);
+    User getUserById(Long id);
 
-    void updateUser(User user, String[] selectedRoles);
-
-    User getUserById(int id);
+    void saveUser(User user);
 
     void deleteUser(User user);
-
-    void deleteUserById(int id);
-
-    User getUserByEmail(String email);
-
-    String getRolesString(User user);
-
-
-
 }

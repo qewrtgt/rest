@@ -1,5 +1,11 @@
 package com.spring.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,7 +15,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-
+//@Data
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+@Getter
+@Setter
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +41,15 @@ public class User implements UserDetails {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "users_id"),
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
+    @JsonManagedReference
+    @JsonIgnore
     private Set<Role> roles;
+
+    public User() {
+    }
 
     public User(Long id, String firstName, String lastName, int age, String email, String password, Set<Role> roles) {
         this.id = id;
@@ -46,16 +61,12 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public User(String firstName, String lastName, int age, String email, String password, Set<Role> roles) {
+    public User(Long id, String firstName, String lastName, int age, String email) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
-        this.password = password;
-        this.roles = roles;
-    }
-
-    public User() {
     }
 
     @Override
@@ -83,30 +94,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return firstName;
-    }
-
-    public void setFirstName(String name) {
-        this.firstName = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     @Override
     public String getPassword() {
         return password;
@@ -114,39 +101,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return firstName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     @Override
@@ -158,7 +113,7 @@ public class User implements UserDetails {
                 ", age=" + age +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", roles=" + getRoles() +
+                ", roles=" + roles +
                 '}';
     }
 }

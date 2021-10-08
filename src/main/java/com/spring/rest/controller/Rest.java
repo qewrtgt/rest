@@ -1,5 +1,6 @@
 package com.spring.rest.controller;
 
+import com.spring.rest.dto.UserDto;
 import com.spring.rest.model.User;
 import com.spring.rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +13,16 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api")
 public class Rest {
-    @Autowired
+
     UserService userService;
 
     public Rest(UserService userService) {
         this.userService = userService;
     }
 
-    public Rest() {
-    }
-
     @GetMapping()
-    public ResponseEntity<List<User>> getAllUsers() {
-        final List<User> list = userService.getAllUsers();
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> list = userService.getAllUsers();
         return list != null && !list.isEmpty()
                 ? new ResponseEntity<>(list, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -1,13 +1,8 @@
 package com.spring.rest.dto;
 
-import com.spring.rest.model.Role;
 import com.spring.rest.model.User;
 import com.spring.rest.repository.RoleRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 @Component
 public class UserConverterDto {
@@ -29,17 +24,7 @@ public class UserConverterDto {
         userDto.setAge(user.getAge());
         userDto.setPassword(user.getPassword());
 
-//        List<String> roles = user.getRoles().stream()
-//                .map(roleRepository::findRoleByRoleName)
-//                .collect(Collectors.toList());
-        List<String> roles = new ArrayList<>();
-        for (Role role : user.getRoles()) {
-            roles.add(role.getName());
-        }
-
-
-
-        userDto.setRoles(roles);
+        userDto.setRoles(user.getRoles());
         return userDto;
     }
 
@@ -52,14 +37,8 @@ public class UserConverterDto {
         user.setAge(userDto.getAge());
         user.setPassword(userDto.getPassword());
 
-//        Set<Role> roles = userDto.getRoles().stream()
-//                .map(role -> role.getName())
-//                .collect(Collectors.toSet());
 
-        Set<Role> roles = null;
-        for (String roleName : userDto.getRoles()) {
-            roles.add(roleRepository.findRoleByName(roleName));
-        }
+        user.setRoles(userDto.getRoles());
         return user;
     }
 

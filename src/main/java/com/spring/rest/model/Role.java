@@ -11,8 +11,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "t_role")
-//@AllArgsConstructor
-//@NoArgsConstructor
 
 public class Role implements GrantedAuthority {
 
@@ -57,7 +55,7 @@ public class Role implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return id.equals(role.id);
+        return name.equals(role.name);
     }
 
     @Override

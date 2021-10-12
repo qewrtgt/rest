@@ -1,18 +1,20 @@
 package com.spring.rest.service;
 
 import com.spring.rest.dto.UserDto;
-import com.spring.rest.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    List<UserDto> getAllUsers();
+    List<UserDto> getAllUsersDto();
 
-    User getUserById(Long id);
+    UserDto getUserDtoById(Long id);
 
-    void saveUser(User user);
+    void saveUserDto(UserDto userDto);
 
-    void deleteUser(User user);
+    void deleteUserById(Long id);
+
+    UserDto loadPrincipalDto(String email);
+
 }

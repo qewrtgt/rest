@@ -4,7 +4,6 @@ import com.spring.rest.security.handler.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -74,21 +73,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 //страницы аутентификаци доступна всем
-                .antMatchers("/api/**").permitAll()
-                .antMatchers("/**").permitAll()
+//                .antMatchers("/api/**").permitAll()
+//                .antMatchers("/**").permitAll()
                 .antMatchers("/login").anonymous()
                 // защищенные URL
-//                .antMatchers("/rest").access("hasAuthority('ADMIN')")
-                // .antMatchers("/admin/**").access("hasAuthority('ADMIN')")
-                // .antMatchers("/user/**").access("hasAuthority('USER') or hasAuthority('ADMIN')")
+//                .antMatchers("/api/**").access("hasAuthority('ADMIN')")
+//                 .antMatchers("/admin/**").access("hasAuthority('ADMIN')")
+                .antMatchers("/**").access("hasAuthority('USER') or hasAuthority('ADMIN')")
                 .anyRequest().authenticated();
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:3030")
-                 .allowedOrigins("http://localhost:63342")
+                .allowedOrigins("*")
+//                 .allowedOrigins("http://localhost:63342")
                 .allowedMethods("*");
     }
 

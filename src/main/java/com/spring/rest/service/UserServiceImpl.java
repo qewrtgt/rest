@@ -15,53 +15,6 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-   /* private UserRepository userRepository;
-
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        for (User user : users) {
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        }
-        return users;
-    }
-
-    @Override
-    public User getUserById(Long id) {
-        User user = userRepository.getById(id);
-        user.setPassword("");
-        return user;
-    }
-
-    @Override
-    public void saveUser(User user) {
-        if (user.getPassword().equals("")) {
-            user.setPassword(loadUserByUsername(user.getEmail()).getPassword());
-        } else {
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        }
-        userRepository.save(user);
-    }
-
-    @Override
-    public void deleteUser(User user) {
-        userRepository.delete(user);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByEmail(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user;
-    }*/
-
     private UserRepository userRepository;
     private UserDto userDto;
     private UserConverterDto userConverterDto;
@@ -74,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserDto> getAllUsersDto() {
         List<User> users = userRepository.findAll();
         List<UserDto> usersDto = new ArrayList<>();
         for (User user : users) {
@@ -85,18 +38,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return null;
+    public UserDto getUserDtoById(Long id) {
+        System.out.println(id);
+        User user = userRepository.getById(id);
+        user.setPassword("");
+        UserDto userDto = userConverterDto.converterUserToUserDto(user);
+        System.out.println(userDto);
+
+        return userDto;
     }
 
     @Override
-    public void saveUser(User user) {
-
+    public void saveUserDto(UserDto userDto) {
+        User user = userConverterDto.converterUserDtoToUser(userDto);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
 
+
+    public UserDto loadPrincipalDto(String email) {
+        return userConverterDto.converterUserToUserDto((User) loadUserByUsername(email));
     }
 
     @Override
